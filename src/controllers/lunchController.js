@@ -23,12 +23,30 @@ const lunchList = async (req, res) => {
 
 	for (i=0; i<rows.length; i++) {
 		pair = {};
-		pair["startDate"] = startDate;
-		pair["endDate"] = endDate;
+		pair["id"] = rows[i].id;
 		pair["name"] = rows[i].name;
 		pair["food"] = rows[i].food;
+		pair["created_at"] = dateFormatter(rows[i].created_at);
+		pair["updated_at"] = dateFormatter(rows[i].updated_at);
 		result.push(pair);
 	};
+	return res.status(200).json(result);
+};
+
+const lunchView = async (req, res) => {
+	const id = req.params.id;
+
+	const rows = await lunchService.lunchView(id);	
+
+	let result = {}
+	if (rows) {
+		result["id"] = rows[0].id;
+		result["name"] = rows[0].name;
+		result["food"] = rows[0].food;
+		result["created_at"] = dateFormatter(rows[0].created_at);
+		result["updated_at"] = dateFormatter(rows[0].updated_at);
+	}
+
 	return res.status(200).json(result);
 }
 
@@ -64,6 +82,7 @@ const lunchUpdate = async (req, res) => {
 
 module.exports = {
 	lunchList,
+	lunchView,
 	lunchInput,
 	lunchUpdate
 };

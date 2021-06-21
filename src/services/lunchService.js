@@ -2,10 +2,17 @@ const pool = require('../../config');
 
 const lunchList = async (startDate, endDate) => {
 	const connection = await pool.getConnection(async conn => conn);
-	const sql = "SELECT * FROM lunch where updated_at BETWEEN ? AND ?";
+	const sql = "SELECT * FROM lunch WHERE updated_at BETWEEN ? AND ?";
 	const values = [startDate, endDate]
 	const [results] = await connection.query(sql, values);
 	return results;
+};
+
+const lunchView = async (id) => {
+	const connection = await pool.getConnection(async conn => conn);
+	const sql = "SELECT * FROM lunch WHERE id = ?";
+	const [result] = await connection.query(sql, id);
+	return result;
 };
 
 const lunchInput = async (data) => {
@@ -36,6 +43,7 @@ const lunchUpdate = async (data) => {
 
 module.exports = {
 	lunchList,
+	lunchView,
 	lunchInput,
 	lunchUpdate
 };
