@@ -1,5 +1,3 @@
-
-
 const dateFormatter = (dateTime) => {
 	const year = dateTime.getFullYear();
 	const months = ("0" + (dateTime.getMonth() + 1)).slice(-2);
@@ -11,4 +9,4 @@ const dateFormatter = (dateTime) => {
 	return `${year}-${months}-${date} ${hours}:${minutes}:${seconds}`;
 }
 
-module.exports = dateFormatter
+module.exports = dateFormatter;

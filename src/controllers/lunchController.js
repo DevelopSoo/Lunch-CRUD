@@ -11,7 +11,6 @@ const lunchList = async (req, res) => {
 	} else {
 		// dateTime을 수정할 것이기 때문에 let으로 둔다. --> const로 둬도 큰 문제 없는데 뭘까
 		let dateTime = new Date();
-
 		endDate = dateFormatter(dateTime);
 		// 24시간 전으로 돌리기
 		dateTime.setHours(dateTime.getHours() - 24);
@@ -45,10 +44,10 @@ const lunchView = async (req, res) => {
 		result["food"] = rows[0].food;
 		result["created_at"] = dateFormatter(rows[0].created_at);
 		result["updated_at"] = dateFormatter(rows[0].updated_at);
-	}
+	};
 
 	return res.status(200).json(result);
-}
+};
 
 // 점심메뉴 입력
 const lunchInput = async (req, res) => {
