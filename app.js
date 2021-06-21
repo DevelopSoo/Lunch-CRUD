@@ -20,5 +20,7 @@ app.get('/', (req, res) => {
   res.send('API SERVER OK');
 });
 
+
 app.get('/menus', lunchController.lunchList);
 app.post('/menus', lunchController.lunchInput);
+app.put('/menus/:id', lunchController.lunchUpdate);

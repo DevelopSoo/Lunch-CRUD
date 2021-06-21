@@ -16,11 +16,25 @@ const lunchInput = async (data) => {
 			throw err;
 			return;
 		}; 
-		console.log("Number of records Inserted : "+ result.affectedRows);
+		console.log("Number of records Inserted: "+ result.affectedRows);
+	});
+};
+
+const lunchUpdate = async (data) => {
+	const connection = await pool.getConnection(async conn => conn);
+	const sql = "UPDATE lunch SET name = ?, food = ? WHERE id = ?"
+	const values = [data["name"], data["food"], data["id"]];
+	const query = await connection.query(sql, values, (err, result) => {
+		if (err) {
+			throw err;
+			return;
+		};
+		console.log("Number of records Updated: "+ result.affectedRows)
 	});
 };
 
 module.exports = {
 	lunchList,
-	lunchInput
+	lunchInput,
+	lunchUpdate
 };
