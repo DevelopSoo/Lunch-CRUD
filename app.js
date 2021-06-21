@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 
-const lunchController = require('./src/controllers/lunchController')
+const lunchController = require('./src/controllers/lunchController');
 
 /**
  * 화면으로 보여준다고 가정할 시 사용하기
@@ -21,3 +21,4 @@ app.get('/', (req, res) => {
 });
 
 app.get('/menus', lunchController.lunchList);
+app.post('/menus', lunchController.lunchInput);
