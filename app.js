@@ -25,3 +25,4 @@ app.get('/menus', lunchController.lunchList);
 app.get('/menus/:id', lunchController.lunchView);
 app.post('/menus', lunchController.lunchInput);
 app.put('/menus/:id', lunchController.lunchUpdate);
+app.delete('/menus/:id', lunchController.lunchDelete);

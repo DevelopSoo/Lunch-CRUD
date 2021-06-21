@@ -80,9 +80,18 @@ const lunchUpdate = async (req, res) => {
 	return res.status(200).json({"message": "Update Success"});
 };
 
+const lunchDelete = async (req, res) => {
+	const id = req.params.id;
+
+	await lunchService.lunchDelete(id);
+
+	return res.status(200).json({"message": "Delete Success"});
+}
+
 module.exports = {
 	lunchList,
 	lunchView,
 	lunchInput,
-	lunchUpdate
+	lunchUpdate,
+	lunchDelete
 };

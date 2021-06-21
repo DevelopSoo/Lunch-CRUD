@@ -41,9 +41,21 @@ const lunchUpdate = async (data) => {
 	});
 };
 
+const lunchDelete = async (id) => {
+	const connection = await pool.getConnection(async conn => conn);
+	const sql = "DELETE FROM lunch WHERE id = ?";
+	const query = await connection.query(sql, id, (err, result) => {
+		if (err) {
+			throw err;
+			return;
+		};
+	})
+
+}
 module.exports = {
 	lunchList,
 	lunchView,
 	lunchInput,
-	lunchUpdate
+	lunchUpdate,
+	lunchDelete
 };
