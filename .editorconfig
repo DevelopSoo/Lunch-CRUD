@@ -1,0 +1,11 @@
+
+root = true
+
+[*]
+indent_style = tab
+
+[foo.js]
+tab_width = 2
+
+[bar.js]
+tab_width = 2
