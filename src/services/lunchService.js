@@ -29,10 +29,12 @@ const lunchInput = async (data) => {
 
 const lunchUpdate = async (data) => {
 	const connection = await pool.getConnection(async conn => conn);
-	const sql = "UPDATE lunch SET name = ?, food = ? WHERE id = ?"
+	const sql = "UPDATE lunch SET name = ?, food = ? WHERE id = ?";
+	// const sql = "UPDATE lunch SET name = ?, food = ? WHERE id = ? AND updated_at BETWEEN ? AND ?"
 	const values = [data["name"], data["food"], data["id"]];
 	const query = await connection.query(sql, values, (err, result) => {
 		if (err) {
+			console.log(query)
 			throw err;
 			return;
 		};
@@ -47,9 +49,9 @@ const lunchDelete = async (id) => {
 			throw err;
 			return;
 		};
-	})
+	});
+};
 
-}
 module.exports = {
 	lunchList,
 	lunchView,

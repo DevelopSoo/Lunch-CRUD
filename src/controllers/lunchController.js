@@ -1,5 +1,7 @@
 const lunchService = require('../services/lunchService');
-const dateFormatter = require('../../utils/formatter');
+//const dateFormatter = require('../../utils/formatter');
+const formatISO9075 = require('date-fns/formatISO9075')
+const sub = require('date-fns/sub');
 
 // 전체 리스트 표출 - 미완성
 const lunchList = async (req, res) => {
@@ -11,11 +13,17 @@ const lunchList = async (req, res) => {
 	} else {
 		// dateTime을 수정할 것이기 때문에 let으로 둔다. 
     // --> const로 둬도 큰 문제 없는데 뭘까
-		let dateTime = new Date();
-		endDate = dateFormatter(dateTime);
-		// 24시간 전으로 돌리기
-		dateTime.setHours(dateTime.getHours() - 24);
-		startDate = dateFormatter(dateTime);
+		// let dateTime = new Date();
+		// endDate = dateFormatter(dateTime);
+		// setHours() => 날짜 혹은 시간 수정 메소드 (24시간 전으로 돌리기)
+		// dateTime.setHours(dateTime.getHours() - 24);
+		// startDate = dateFormatter(dateTime);
+
+		// date-fns 모듈 사용하기
+		endDate = new Date();
+		startDate = sub(endDate, {hours:24});
+		endDate = formatISO9075(endDate);
+		startDate = formatISO9075(startDate);
 	};
 
 	const rows = await lunchService.lunchList(startDate, endDate);
@@ -26,8 +34,10 @@ const lunchList = async (req, res) => {
 		pair["id"] = rows[i].id;
 		pair["name"] = rows[i].name;
 		pair["food"] = rows[i].food;
-		pair["created_at"] = dateFormatter(rows[i].created_at);
-		pair["updated_at"] = dateFormatter(rows[i].updated_at);
+		// pair["created_at"] = dateFormatter(rows[i].created_at);
+		// pair["updated_at"] = dateFormatter(rows[i].updated_at);
+		pair["created_at"] = formatISO9075(rows[i].created_at);
+		pair["updated_at"] = formatISO9075(rows[i].updated_at);
 		result.push(pair);
 	};
 	return res.status(200).json(result);
@@ -44,8 +54,8 @@ const lunchView = async (req, res) => {
 		result["id"] = rows[0].id;
 		result["name"] = rows[0].name;
 		result["food"] = rows[0].food;
-		result["created_at"] = dateFormatter(rows[0].created_at);
-		result["updated_at"] = dateFormatter(rows[0].updated_at);
+		result["created_at"] = formatISO9075(rows[0].created_at);
+		result["updated_at"] = formatISO9075(rows[0].updated_at);
 	};
 
 	return res.status(200).json(result);
@@ -60,7 +70,7 @@ const lunchInput = async (req, res) => {
 		"name": name,
 		"food": food
 	};
-	lunchService.lunchInput(data);
+	await lunchService.lunchInput(data);
 
 	return res.status(201).json({"message": "INSERT SUCCESS"})
 };
@@ -71,12 +81,17 @@ const lunchUpdate = async (req, res) => {
 	const name = req.body.name;
 	const food = req.body.food;
 
+	const dateTime = new Date();
+	// const endDate = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate(), 12, 00, 0);
+	// const startDate = new Date(dateTime.getFullYear(), dateTime.getMonth(), dateTime.getDate()-1, 12, 00, 00);
 	const data = {
 		"id": id,
 		"name": name,
 		"food": food,
+		// "startDate": startDate,
+		// "endDate": endDate
 	};
-	lunchService.lunchUpdate(data);
+	await lunchService.lunchUpdate(data);
 	
 	return res.status(200).json({"message": "Update Success"});
 };
