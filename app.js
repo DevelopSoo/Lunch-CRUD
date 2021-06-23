@@ -13,7 +13,7 @@ app.use(express.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
 
 app.listen(port, () => {
-  console.log(`start!`);
+  console.log(`port ${port} start!`);
 });
 
 app.get('/', (req, res) => {

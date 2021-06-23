@@ -2,54 +2,34 @@ const pool = require('../../config');
 
 const lunchList = async (startDate, endDate) => {
 	const connection = await pool.getConnection(async conn => conn);
-	const sql = "SELECT * FROM lunch WHERE updated_at BETWEEN ? AND ?";
-	const values = [startDate, endDate];
-	const [results] = await connection.query(sql, values);
+	const [results] = await connection.query("SELECT * FROM lunch WHERE updated_at BETWEEN ? AND ?", [startDate, endDate]);
 	return results;
 };
 
 const lunchView = async (id) => {
 	const connection = await pool.getConnection(async conn => conn);
-	const sql = "SELECT * FROM lunch WHERE id = ?";
-	const [result] = await connection.query(sql, id);
+	const [result] = await connection.query("SELECT * FROM lunch WHERE id = ?", id);
 	return result;
 };
 
-const lunchInput = async (data) => {
+const lunchInput = async (name, food) => {
 	const connection = await pool.getConnection(async conn => conn);
-	const sql = "INSERT INTO lunch (name, food) VALUES (?, ?)";
-	const values = [data["name"], data["food"]];
-	const query = await connection.query(sql, values, (err, result) => {
-		if (err) {
-			throw err;
-			return;
-		}; 
-	});
+	const query = await connection.query("INSERT INTO lunch (name, food) VALUES (?, ?)", [name, food]);
+	return query.affectedRows; // affectedRows가 1인지 아닌지 확인하기 위함 
 };
 
-const lunchUpdate = async (data) => {
+const lunchUpdate = async (id, name, food) => {
 	const connection = await pool.getConnection(async conn => conn);
-	const sql = "UPDATE lunch SET name = ?, food = ? WHERE id = ?";
-	const values = [data["name"], data["food"], data["id"]];
-	const query = await connection.query(sql, values, (err, result) => {
-		if (err) {
-			console.log(query)
-			throw err;
-			return;
-		};
-	});
+	const query = await connection.query("UPDATE lunch SET name = ?, food = ? WHERE id = ?", [name, food, id]);
+	return query.affectedRows; // affectedRows가 1인지 아닌지 확인하기 위함 
 };
 
 const lunchDelete = async (id) => {
-	const connection = await pool.getConnection(async conn => conn);
-	const sql = "DELETE FROM lunch WHERE id = ?";
-	const query = await connection.query(sql, id, (err, result) => {
-		if (err) {
-			throw err;
-			return;
-		};
-	});
+		const connection = await pool.getConnection(async conn => conn);
+		const [query] = await connection.query("DELETE FROM lunch WHERE id = ?", id);
+		return query.affectedRows; // affectedRows가 1인지 아닌지 확인하기 위함 
 };
+
 
 module.exports = {
 	lunchList,
