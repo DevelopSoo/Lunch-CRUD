@@ -6,9 +6,10 @@ const lunchController = require('./src/controllers/lunchController');
 
 const Slack = require('slack-node');
 const schedule = require('node-schedule');
+const config = require('./config')
 const { subBusinessDays } = require('date-fns');
 
-const webhookUri = "https://hooks.slack.com/services/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"
+const webhookUri = config.webhookUri;
 
 const slack = new Slack();
 slack.setWebhook(webhookUri);
@@ -28,7 +29,7 @@ schedule.scheduleJob('9 * * * *', function() {
   send("병수");
 })
 /**
- * 화면으로 보여준다고 가정할 시 사용하기
+ * 화면으로 보여준다고 가`정할 시 사용하기
  */
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
