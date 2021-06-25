@@ -32,7 +32,7 @@ const lunchDelete = async (id) => {
 		return query.affectedRows; // affectedRows가 1인지 아닌지 확인하기 위함 
 };
 
-const slackSend = async (startDate, endDate) => {
+const slackGetTodayLunchList = async (startDate, endDate) => {
 	const connection = await pool.getConnection(async conn => conn);
 	const [rows] = await connection.query("SELECT name, food FROM lunch WHERE updatedAt BETWEEN ? AND ?", [startDate, endDate])
 
@@ -45,5 +45,5 @@ module.exports = {
 	lunchInput,
 	lunchUpdate,
 	lunchDelete,
-	slackSend
+	slackGetTodayLunchList
 };

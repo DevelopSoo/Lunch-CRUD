@@ -103,13 +103,12 @@ const lunchDelete = async (req, res) => {
 	};
 };
 
-const slackSendList = async () => {
+const slackSendLunchTodayList = async () => {
 	let endDate = new Date();
 	let startDate = dateSub(endDate, {hours:24});
-	// dateSub(endDate, {hours:24})를 바로 포매팅하면 에러 발생 (parseISO해도 발생)
 	endDate = formatISO9075(endDate);
   startDate = formatISO9075(startDate);
-	const rows = await lunchService.slackSend(startDate, endDate);
+	const rows = await lunchService.slackGetTodayLunchList(startDate, endDate);
 
 	// 슬랙에 이름과 음식을 표출하기 위한 작업
 	const lunchArray = []
@@ -125,8 +124,8 @@ const slackSendList = async () => {
 	};
 
 	// webhook의 attachments의 block 모양을 맞추기 위해 앞,뒤에 다음과 같이 정보를 삽입
-	lunchArray.unshift({"type": "divider"}); // divider선
-	lunchArray.push({"type": "divider"}) ;
+	lunchArray.push({"type": "divider"}); // divider선
+	lunchArray.unshift({"type": "divider"}); 
 	lunchArray.unshift({
 		"type": "section",
 		"text": {
@@ -153,7 +152,7 @@ const slackSendList = async () => {
   });
 };
 
-const slackSendLunchAlarm = async () => {
+const slackSendLunchInputAlarm = async () => {
 	const webhookUri = config.webhookUri;
 	const slack = new Slack();
 	slack.setWebhook(webhookUri);
@@ -186,6 +185,6 @@ module.exports = {
 	lunchInput,
 	lunchUpdate,
 	lunchDelete,
-	slackSendList,
-	slackSendLunchAlarm
+	slackSendLunchTodayList,
+	slackSendLunchInputAlarm
 };

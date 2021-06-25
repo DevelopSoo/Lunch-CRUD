@@ -5,13 +5,13 @@ const bodyParser = require('body-parser');
 const lunchController = require('./src/controllers/lunchController');
 const schedule = require('node-schedule');
 
-// 먹고 싶은 점심 작성하라는 알람
-schedule.scheduleJob('50 * * * *', () => {
-  lunchController.slackSendLunchAlarm(); 
+// 먹고 싶은 점심 작성하라는 알람 (매일 11시)
+schedule.scheduleJob('* 11 * * *', () => {
+  lunchController.slackSendLunchInputAlarm(); 
 })
 // 오늘의 점심 리스트 슬랙 알림 (매일 12시)
 schedule.scheduleJob('* 12 * * *', () => {
-  lunchController.slackSendList();
+  lunchController.slackSendLunchTodayList();
 });
 
 /**
