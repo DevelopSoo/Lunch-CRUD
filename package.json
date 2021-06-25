@@ -1,7 +1,6 @@
 {
   "name": "lunch_crud",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +10,19 @@
   "dependencies": {
     "date-fns": "^2.22.1",
     "express": "^4.17.1",
-    "mysql2": "^2.2.5"
-  }
+    "mysql2": "^2.2.5",
+    "node-schedule": "^2.0.0",
+    "slack-node": "^0.1.8"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevelopSoo/Lunch-CRUD.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/DevelopSoo/Lunch-CRUD/issues"
+  },
+  "homepage": "https://github.com/DevelopSoo/Lunch-CRUD#readme",
+  "description": ""
 }

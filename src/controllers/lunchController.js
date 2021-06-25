@@ -1,6 +1,9 @@
 const lunchService = require('../services/lunchService');
-const formatISO9075 = require('date-fns/formatISO9075')
+const formatISO9075 = require('date-fns/formatISO9075');
 const dateSub = require('date-fns/sub');
+const Slack = require('slack-node'); // 여기
+const config = require('../../config') // 컨트롤러(slack 연결), 서비스(db연결)
+
 
 /**
  * 전체 리스트 표출
@@ -100,10 +103,88 @@ const lunchDelete = async (req, res) => {
 	};
 };
 
+const slackSendLunchTodayList = async () => {
+	let endDate = new Date();
+	let startDate = dateSub(endDate, {hours:24});
+	endDate = formatISO9075(endDate);
+  startDate = formatISO9075(startDate);
+	const rows = await lunchService.slackGetTodayLunchList(startDate, endDate);
+
+	// 슬랙에 이름과 음식을 표출하기 위한 작업
+	const lunchArray = []
+	for (i=0; i<rows.length; i++) {
+		lunchArray.push(
+			{
+				"type": "section",
+				"text": {
+					"type": "mrkdwn",
+					"text": `이름: ${rows[i].name}\n음식: ${rows[i].food}`
+				}       
+			});
+	};
+
+	// webhook의 attachments의 block 모양을 맞추기 위해 앞,뒤에 다음과 같이 정보를 삽입
+	lunchArray.push({"type": "divider"}); // divider선
+	lunchArray.unshift({"type": "divider"}); 
+	lunchArray.unshift({
+		"type": "section",
+		"text": {
+			"type": "mrkdwn",
+			"text": "*오늘의 점심 리스트입니다.*"}
+	}); // 알림 맨 위에 나오는 메시지
+
+	// webhook url로 slack 연결
+	const webhookUri = config.webhookUri;
+	const slack = new Slack();
+	slack.setWebhook(webhookUri);
+
+  slack.webhook({
+    channel: "#개발",
+    username: "slack bot",
+    attachments: [
+      {
+        "color": "#f2c744",
+        "blocks": lunchArray
+      }
+    ]
+  }, (err, response) => {
+    console.log(response);
+  });
+};
+
+const slackSendLunchInputAlarm = async () => {
+	const webhookUri = config.webhookUri;
+	const slack = new Slack();
+	slack.setWebhook(webhookUri);
+
+	slack.webhook({
+		channel: "#개발",
+		username: "slack bot",
+		attachments: [
+		{
+			"color": "#f2c744",
+			"blocks": [
+				{
+					"type": "section",
+					"text": {
+						"type": "mrkdwn",
+						"text": "*오늘 점심을 선택해주세요!!*"}
+				}
+			]
+		}
+		]
+	}, (err, response) => {
+		console.log(response);
+	});
+};
+
+
 module.exports = {
 	lunchList,
 	lunchView,
 	lunchInput,
 	lunchUpdate,
-	lunchDelete
+	lunchDelete,
+	slackSendLunchTodayList,
+	slackSendLunchInputAlarm
 };
