@@ -1,4 +1,6 @@
-const pool = require('../../config');
+const config = require('../../config');
+
+const pool = config.pool;
 
 const lunchList = async (startDate, endDate) => {
 	const connection = await pool.getConnection(async conn => conn);
@@ -30,7 +32,10 @@ const lunchDelete = async (id) => {
 		return query.affectedRows; // affectedRows가 1인지 아닌지 확인하기 위함 
 };
 
-
+const lunchSlack = async () => {
+	const connection = await pool.getConnection(async conn => conn);
+	const [rows] = await connection.query("SELECT name, food FROM lunch WHERE updatedAt BETWEEN ")
+}
 module.exports = {
 	lunchList,
 	lunchView,

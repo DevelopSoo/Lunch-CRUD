@@ -1,5 +1,5 @@
 const lunchService = require('../services/lunchService');
-const formatISO9075 = require('date-fns/formatISO9075')
+const formatISO9075 = require('date-fns/formatISO9075');
 const dateSub = require('date-fns/sub');
 
 /**
@@ -99,6 +99,7 @@ const lunchDelete = async (req, res) => {
 		return res.json({"error_message": e.message});
 	};
 };
+
 
 module.exports = {
 	lunchList,
