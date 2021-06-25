@@ -1,7 +1,6 @@
 const lunchService = require('../services/lunchService');
 const formatISO9075 = require('date-fns/formatISO9075');
 const dateSub = require('date-fns/sub');
-
 const Slack = require('slack-node'); // 여기
 const config = require('../../config') // 컨트롤러(slack 연결), 서비스(db연결)
 
@@ -104,11 +103,9 @@ const lunchDelete = async (req, res) => {
 	};
 };
 
-const slackSend = async () => {
+const slackSendList = async () => {
 	let endDate = new Date();
 	let startDate = dateSub(endDate, {hours:24});
-	console.log(endDate);
-	console.log(startDate);
 	// dateSub(endDate, {hours:24})를 바로 포매팅하면 에러 발생 (parseISO해도 발생)
 	endDate = formatISO9075(endDate);
   startDate = formatISO9075(startDate);
@@ -128,8 +125,8 @@ const slackSend = async () => {
 	};
 
 	// webhook의 attachments의 block 모양을 맞추기 위해 앞,뒤에 다음과 같이 정보를 삽입
-	lunchArray.unshift({"type": "divider"}) // divider선
-	lunchArray.push({"type": "divider"}) 
+	lunchArray.unshift({"type": "divider"}); // divider선
+	lunchArray.push({"type": "divider"}) ;
 	lunchArray.unshift({
 		"type": "section",
 		"text": {
@@ -145,16 +142,43 @@ const slackSend = async () => {
   slack.webhook({
     channel: "#개발",
     username: "slack bot",
-    "attachments": [
+    attachments: [
       {
         "color": "#f2c744",
         "blocks": lunchArray
       }
     ]
-  }, function(err, response) {
-    console.log(response)
+  }, (err, response) => {
+    console.log(response);
   });
 };
+
+const slackSendLunchAlarm = async () => {
+	const webhookUri = config.webhookUri;
+	const slack = new Slack();
+	slack.setWebhook(webhookUri);
+
+	slack.webhook({
+		channel: "#개발",
+		username: "slack bot",
+		attachments: [
+		{
+			"color": "#f2c744",
+			"blocks": [
+				{
+					"type": "section",
+					"text": {
+						"type": "mrkdwn",
+						"text": "*오늘 점심을 선택해주세요!!*"}
+				}
+			]
+		}
+		]
+	}, (err, response) => {
+		console.log(response);
+	});
+};
+
 
 module.exports = {
 	lunchList,
@@ -162,5 +186,6 @@ module.exports = {
 	lunchInput,
 	lunchUpdate,
 	lunchDelete,
-	slackSend
+	slackSendList,
+	slackSendLunchAlarm
 };
